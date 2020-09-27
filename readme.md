@@ -1,5 +1,5 @@
 
-## bdl (Booru Downloader)
+## booru-downloader
 
 ### how do i use this?
 
