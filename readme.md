@@ -5,6 +5,8 @@
 
 `> bdl download <url>` should work.
 
+You'll need an environment variable of `SAVE_PATH` if you want to change the default save path, which is the current directory.
+
 ### what sites are supported?
 
 currently, these sites are supported:
