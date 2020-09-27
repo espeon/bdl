@@ -1,7 +1,7 @@
 mod boorus;
 
 use anyhow::anyhow;
-use dotenv;
+use dotenv::dotenv;
 use std::env;
 use std::path::Path;
 use structopt::StructOpt;
@@ -31,7 +31,7 @@ pub struct BooruInfo {
 #[paw::main]
 #[tokio::main]
 async fn main(args: Args) -> anyhow::Result<()> {
-    dotenv::dotenv().ok();
+    dotenv().ok();
     match args.cmd {
         Some(Command::Download { url }) => {
             scrape(url).await;
@@ -48,6 +48,7 @@ async fn main(args: Args) -> anyhow::Result<()> {
 }
 
 async fn scrape(urlin: String) -> anyhow::Result<()> {
+    dotenv::dotenv().ok();
     let url = Url::parse(&urlin)?;
 
     //parse and display info we get from the URL
@@ -55,7 +56,7 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
     println!("image id {} at host {}", info.id, info.host);
 
     let mut base_path = env::var("SAVE_PATH").unwrap_or("img/".to_string());
-    
+
     //check if destination folder exists, and if not create it
     match Path::new(&base_path.to_owned()).exists() {
         true => (),
