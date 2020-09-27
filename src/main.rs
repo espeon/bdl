@@ -55,6 +55,12 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
     println!("image id {} at host {}", info.id, info.host);
 
     let mut base_path = env::var("SAVE_PATH").unwrap_or("img/".to_string());
+    
+    //check if destination folder exists, and if not create it
+    match Path::new(&base_path.to_owned()).exists() {
+        true => (),
+        false => fs::create_dir(&base_path).await?,
+    }
 
     //check if we should include the host as a folder
     match env::var("INCLUDE_HOST")
@@ -118,7 +124,6 @@ async fn download(info: BooruInfo, location: String) -> anyhow::Result<()> {
         "danbooru.donmai.us" => danbooru::danbooru(info).await?,
         _ => return Err(anyhow!("Input url is not currently supported.")),
     };
-
 
     //not sure what this does, i copied it off the web
     let response = reqwest::get(&download_url).await?;
