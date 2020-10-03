@@ -53,7 +53,7 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
 
     //parse and display info we get from the URL
     let info = parse_booru_info(url.clone()).await?;
-    println!("image id {} at host {}", info.id, info.host);
+    println!("checking image id {} at host {}", info.id, info.host);
 
     let mut base_path = env::var("SAVE_PATH").unwrap_or("".to_string());
 
@@ -106,13 +106,13 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
 }
 
 async fn parse_booru_info(url: Url) -> anyhow::Result<BooruInfo> {
-    let ret = match url
-        .clone()
-        .into_string()
-        .contains("index.php?page=post&s=view&id=")
-    {
-        true => gelbooru::gelbooru_parser(url).await?,
-        false => danbooru::danbooru_parser(url).await?,
+    let host = url.host_str().unwrap().to_string();
+    let host_str:&str = &host;
+    let ret = match host_str {
+        "gelbooru.com" => gelbooru::gelbooru_parser(url, host).await?,
+        "danbooru.donmai.us" => danbooru::danbooru_parser(url, host).await?,
+        "yande.re" => yandere::yandere_parser(url, host).await?,
+        _ => return Err(anyhow!("Input url is not currently supported.")),
     };
 
     Ok(ret)
@@ -123,6 +123,7 @@ async fn download(info: BooruInfo, location: String) -> anyhow::Result<()> {
     let download_url = match host {
         "gelbooru.com" => gelbooru::gelbooru(info).await?,
         "danbooru.donmai.us" => danbooru::danbooru(info).await?,
+        "yande.re" => yandere::yandere(info).await?,
         _ => return Err(anyhow!("Input url is not currently supported.")),
     };
 
@@ -136,7 +137,9 @@ async fn download(info: BooruInfo, location: String) -> anyhow::Result<()> {
             .and_then(|name| if name.is_empty() { None } else { Some(name) })
             .unwrap_or("tmp.png");
 
-        let file_type = fname.split(".").collect::<Vec<&str>>()[1];
+        let mut file_name_split = fname.split(".").collect::<Vec<&str>>(); // temp value dropped while borrowed if i unwrapped here
+
+        let file_type = file_name_split.last_mut().unwrap();
 
         let fname = location + ".";
         let fname = fname + file_type;
