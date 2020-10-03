@@ -1,6 +1,6 @@
 [package]
 name = "bdl"
-versversion = "0.1.1"
+version = "0.1.1"
 authors = ["Emma Lo <emma@iscute.dev>"]
 edition = "2018"
 
