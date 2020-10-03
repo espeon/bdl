@@ -3,7 +3,7 @@ use crate::ArrayResult;
 
 pub async fn yandere(info: BooruInfo) -> anyhow::Result<String> {
     let image_result =
-        reqwest::get(&format!("https://{}/post.json?tags=id:690092#{}", info.host, info.id))
+        reqwest::get(&format!("https://{}/post.json?tags=id:{}", info.host, info.id))
             .await?
             .json::<ArrayResult>()
             .await.unwrap();

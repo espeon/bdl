@@ -5,7 +5,7 @@ use dotenv::dotenv;
 use std::env;
 use std::path::Path;
 use structopt::StructOpt;
-use url::{ParseError, Url};
+use url::{Url};
 
 use tokio::fs;
 
@@ -34,10 +34,10 @@ async fn main(args: Args) -> anyhow::Result<()> {
     dotenv().ok();
     match args.cmd {
         Some(Command::Download { url }) => {
-            scrape(url).await;
+            scrape(url).await?;
         }
         Some(Command::Dl { url }) => {
-            scrape(url).await;
+            scrape(url).await?;
         }
         None => {
             println!("i don't think this is what you're supposed to do...\nrun the 'help' command for information on how to use this program");
