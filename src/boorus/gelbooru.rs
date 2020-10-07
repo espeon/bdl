@@ -13,19 +13,19 @@ pub async fn gelbooru(info: BooruInfo) -> anyhow::Result<String> {
 }
 
 pub async fn gelbooru_parser(url: url::Url, hosti:String) -> anyhow::Result<BooruInfo> {
-    let mut pairs = url.query_pairs();
-    let mut id = 0;
-    while id == 0 {
+    let mut pairs = url.query_pairs(); // parse the url
+    let mut id = 0; // init the id variable
+    while id == 0 { // take things off stack until we find the id
         let result = pairs.next();
         let unwrap = result.unwrap();
         if unwrap.clone().0.to_mut() == "id" {
             id = unwrap.clone().1.to_mut().parse::<i64>().unwrap()
         }
     }
-    let ret = BooruInfo {
+    let ret = BooruInfo { // put host and id in a struct
         host: hosti,
         id: id,
     };
 
-    Ok(ret)
+    Ok(ret) // return the struct
 }
