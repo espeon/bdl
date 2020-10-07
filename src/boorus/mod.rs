@@ -1,6 +1,7 @@
 pub mod gelbooru;
 pub mod danbooru;
 pub mod yandere;
+pub mod safebooru;
 
 use serde;
 use serde::{Deserialize, Serialize};

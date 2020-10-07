@@ -86,7 +86,7 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
     let save_loc = base_path + &info.id.to_string();
 
     //check whether our image exists and if so exit
-    //if not, attempt to download it
+    //if not, attempt to get the image url and download it
     let img_exists = Path::new(&(save_loc.to_owned() + &".jpg")).exists()
         || Path::new(&(save_loc.to_owned() + &".png")).exists();
     println!(
@@ -111,6 +111,7 @@ async fn parse_booru_info(url: Url) -> anyhow::Result<BooruInfo> {
     let host_str:&str = &host;
     let ret = match host_str {
         "gelbooru.com" => gelbooru::gelbooru_parser(url, host).await?,
+        "safebooru.org" => gelbooru::gelbooru_parser(url, host).await?, //uses gelbooru's id parser
         "danbooru.donmai.us" => danbooru::danbooru_parser(url, host).await?,
         "yande.re" => yandere::yandere_parser(url, host).await?,
         _ => return Err(anyhow!("Input url is not currently supported.")),
@@ -123,6 +124,7 @@ async fn download(info: BooruInfo, location: String) -> anyhow::Result<()> {
     let host: &str = &info.host; //borrowing here so it can be used in match statement
     let download_url = match host {
         "gelbooru.com" => gelbooru::gelbooru(info).await?,
+        "safebooru.org" => safebooru::safebooru(info).await?,
         "danbooru.donmai.us" => danbooru::danbooru(info).await?,
         "yande.re" => yandere::yandere(info).await?,
         _ => return Err(anyhow!("Input url is not currently supported.")),

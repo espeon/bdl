@@ -14,6 +14,8 @@ You'll need an environment variable of `SAVE_PATH` if you want to change the def
 currently, these sites are supported:
 * danbooru.donmai.us
 * gelbooru.com
+* safebooru.net
+* yande.re
 
 if you know how to, feel free to add more stuff or update whatever is currently here!
 
