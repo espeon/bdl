@@ -56,6 +56,7 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
     println!("checking image id {} at host {}", info.id, info.host);
 
     let mut base_path = env::var("SAVE_PATH").unwrap_or("".to_string());
+    let divider: &str = &env::var("DIVIDER").unwrap_or("-".to_string());
 
     //check if destination folder exists, and if not create it
     match Path::new(&base_path.to_owned()).exists() {
@@ -70,7 +71,7 @@ async fn scrape(urlin: String) -> anyhow::Result<()> {
         .unwrap()
     {
         true => {
-            base_path = base_path + &url.host_str().unwrap() + "/";
+            base_path = base_path + &url.host_str().unwrap() + divider;
         }
         false => print!(""),
     };
