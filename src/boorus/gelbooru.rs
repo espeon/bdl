@@ -2,11 +2,13 @@ use crate::BooruInfo;
 use crate::ArrayResult;
 
 pub async fn gelbooru(info: BooruInfo) -> anyhow::Result<String> {
+    // get image result and parse it into an ImageResult struct
     let image_result =
         reqwest::get(&format!("https://{}/index.php?page=dapi&s=post&q=index&id={}&json=1", info.host, info.id))
             .await?
             .json::<ArrayResult>()
             .await?;
+    // send the file url back
     Ok(image_result[0].file_url.clone())
 }
 
